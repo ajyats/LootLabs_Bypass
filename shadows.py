@@ -284,24 +284,38 @@ def OG_getDest(url):
             
         if isLLBS and sess_uuid:
             try:
-                threading.Thread(target=lambda: session.post(f'https://{hostname}/verify', json={'session': sess_uuid}, timeout=10), daemon=True).start()
+                threading.Thread(target=lambda: session.post(f'https://{hostname}/verify', json={'session': sess_uuid}, timeout=10, headers={"Referer":url}), daemon=True).start()
             except:
                 pass
                 
         mess_session = str(random.randint(100000000000000000, 999999999999999999))
+        
         botd_payload = botd_create_frfr_frfr_frfr(sess_uuid)
+        
+        # chatcumgpt lin
+        import urllib.parse as u
+        
+        Pb = u.parse_qs(u.urlparse(url).query).get("puid",[None])[0]
+        iP = bool(Pb)
+        
         TCData = {
-            "tid": int(tid), "bl": [18, 2, 33, 7, 21, 49], "session": mess_session, "max_tasks": 1,
-            "design_id": 114, "cur_url": str(url), "doc_ref": "", "num_of_tasks": "1",
+            "tid": int(tid), "bl": [10], "session": mess_session, "max_tasks": 1,
+            "design_id": 139, "cur_url": str(url), "doc_ref": "", "num_of_tasks": "",
             "is_loot": isLLBS, "rkey": key, "cookie_id": str(random.randint(100000000, 999999999)),
             "botd": botd_payload, "botds": sess_uuid, "offer": "0", "tier_id": 4,
-            "taboola_user_sync": "", "fid": -1, "clid": str(uuid.uuid4())
+            "taboola_user_sync": "", "fid": -1, "clid": str(uuid.uuid4()),
+            
+            # New XXXTra shit
+            
+            "additional_info":{},"allow_unlocker":True,"desktop_design":0,"show_unlocker":True,"test_unlocker_app":-1, "unlocker_only":0 
         }
+        if iP:
+            print(Pb,iP)
+            TCData["puid"]=iP # postback handling
+            
+        print("MCB")
         
-        # For AdMaven / Postback URLS bypases you should add a "puid" param to this
-        # i didn't do that bc i'm lazy to test w that shit
-        
-        rawr = session.post(f'https://{SYNCER}/tc', json=TCData, timeout=15)
+        rawr = session.post(f'https://{SYNCER}/tc', json=TCData, cookies={"ci":str(random.randint(1000000000000000,9999999999999999))})
         debug.info(f'TC Status: {rawr.status_code}')
         
         if rawr.status_code == 428:
@@ -320,10 +334,19 @@ def OG_getDest(url):
                     TCP = TCP[0]
                     
                 task_id = TCP.get('task_id', 0)
+                
+                # New Task_Clicked event
+                requests.get(f"https://enaightdecipie.com/?event=task_clicked&session_id=${task_id}&info=1");
+                # End new event shi, it was THAT easy y'all lazy niggas
+                
+                
                 urid = TCP.get('urid')
                 TLeft = TCP.get('auto_complete_seconds')
                 APUrl = TCP.get('action_pixel_url', '')
-                
+                PUURL = TCP.get('postback_url',False)
+                if PUURL:
+                    print(PUURL)
+                    
                 if not urid:
                     return 'bypass fail! No urid in TC response'
                     
@@ -350,5 +373,5 @@ def getDest(url):
     res = OG_getDest(url)
     return res
 
-# very sex testing
-print(getDest("https://loot-link.com/s?fJjn&data=ropKerF1C%2BDVFRHtlJ4B3stRPx3lFEDYB2oDjB3ThPSh69WxjLcSsR6Jztj20vw4NG%2F1koL%2BceAV9PuhgrPmCw4NmmUNfZTvbGxEmqSVLmaQy2gtxMklDjREBKKQVZqSXjtqxFNBxtCE0ZtT3%2Foj0vVI3k%2Be3aH90TWWRlCtlW%2BraOY9aws8bcweQELBIdch3o5BxItVuPfFlMPWEVStETRjtkKC%2BD5YuNODaWifsFN4J%2BD4pbFnBnj4s7pZg0NDKCKz9Ifo4dMbAZ2ljkzqIQSbeAZlFG21xW1K8G5K8nOB%2FivvPAV4OEmYOZnbuSgSr6MCGJOENrgBMNPaI8PFPwRGfRNa%2Bp4iFbNj5S%2B6ZX25tXSigT4KhHBq8m7%2F%2FKT89wpwb0jEsyW7ssny4YGZXaMEizaRIA1xZAGTK%2BAO3WFNa7lkaRSBzS4aPidN4e2h6oC0dr5GRnD0uy7G53bXqsYpDhOuVOVcR684OibTQ9Rl38ePnD5J5xS7cJAvmEQ8oyYFpd1oEmf8EL4YSXWLdHED7zfiBuI9RPwhpJeFxXRZkS75UHjrUI8qPR1f04eeLU0xgrillyDr%2Bm5Id1RLA%2BxYm1zLWKat%2B81WgDBIpKV%2BkMgUTyrYaxKcAuySg7BSzxvtE2SFaeono%2Fr%2FPfVZ1FqpRfKHek3ftYdIUtzyHyPkUMtH5cFyrdEuOmU%2FAd%2BE"))
+if __name__ == "__main__":
+    print(getDest("https://links.lootlabs.gg/s?fJjn&data=ropKerF1C%2BDVFRHtlJ4B3stRPx3lFEDYB2oDjB3ThPSh69WxjLcSsR6Jztj20vw4NG%2F1koL%2BceAV9PuhgrPmCw4NmmUNfZTvbGxEmqSVLmaQy2gtxMklDjREBKKQVZqSXjtqxFNBxtCE0ZtT3%2Foj0vVI3k%2Be3aH90TWWRlCtlW%2BraOY9aws8bcweQELBIdch3o5BxItVuPfFlMPWEVStETRjtkKC%2BD5YuNODaWifsFN4J%2BD4pbFnBnj4s7pZg0NDKCKz9Ifo4dMbAZ2ljkzqIQSbeAZlFG21xW1K8G5K8nOB%2FivvPAV4OEmYOZnbuSgSr6MCGJOENrgBMNPaI8PFPwRGfRNa%2Bp4iFbNj5S%2B6ZX25tXSigT4KhHBq8m7%2F%2FKT89wpwb0jEsyW7ssny4YGZXaMEizaRIA1xZAGTK%2BAO3WFNa7lkaRSBzS4aPidN4e2h6oC0dr5GRnD0uy7G53bXqsYpDhOuVOVcR684OibTQ9Rl38ePnD5J5xS7cJAvmEQ8oyYFpd1oEmf8EL4YSXWLdHED7zfiBuI9RPwhpJeFxXRZkS75UHjrUI8qPR1f04eeLU0xgrillyDr%2Bm5Id1RLA%2BxYm1zLWKat%2B81WgDBIpKV%2BkMgUTyrYaxKcAuySg7BSzxvtE2SFaeono%2Fr%2FPfVZ1FqpRfKHek3ftYdIUtzyHyPkUMtH5cFyrdEuOmU%2FAd%2BE"))
