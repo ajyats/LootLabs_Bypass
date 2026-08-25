@@ -1,5 +1,7 @@
 # LootLabs Bypass — Open Source
 
+# SHADOWS_V2.PY IS THE WORKING & UPDATED VERSION, CAPTCHA SOLVER IS REQUIRED!
+
 Automatically resolves LootLabs / Loot-Link key system URLs and returns the destination link.  
 No browser required. Fully scriptable.
 
